@@ -7,6 +7,7 @@ We have designed a small UI using tkinter to interact with the use to register t
 
 The following are the porpuses of the files:
 - pipeline.py: from a zomate API request, process, compute the rating, and perform cosine similarity on restaurants, leaving the data ready and sorted for the user to display. All the more technical parts of the code are here.
-- restaurant_details.json: the initial small dataset comprehending of 50 restaurants in Surat, India, that was used to mock the API
+- restaurant_details.json: the initial small dataset comprehending of 50 restaurants in Surat, India, that was used to mock the API, in raw format
+- restaurant_details.csv: curated and ready to use dataset after being passed through pipeline.py
 - restaurants2.ipynb: jupyter notebook where code was tried
 - tinker.py: GUI design and implementation
