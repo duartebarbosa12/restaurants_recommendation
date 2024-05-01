@@ -56,23 +56,30 @@ def pipeline(df):
     temp =  [" ".join(x) for x in data_frame['res_catagory'] ]
     data_frame['bag_of_words'] = temp
     data_frame['res_name'] = data_frame['res_name'].apply(lambda x: x.split(',')[0])
-    
-    # Rounding and splitting the location
-    data_frame['res_loc_x'] = data_frame['res_loc'].apply(lambda x: x.split(",")[0])
-    data_frame['res_loc_y'] = data_frame['res_loc'].apply(lambda x: x.split(",")[1])
-    
+
     # Creating a column for time
     data_frame['time'] = [df[x]['time'] for x in indexes]
-    
+
     # Creating a column for the location link
     data_frame['location_link'] = [df[x]['location'] for x in indexes]
-    
+
     # Creating a column for the zomato link
     links = list(df.keys())[0]
     data_frame['zomato_link'] = list(df.keys())[0]
-    
+
     # Creating a column for the phone number
     data_frame['delivery_rating'] = [df[x]['delivery_rating'] for x in indexes]
+
+    # Creating a column for the first image
+    def get_images(url):
+        return df[url]['imgs']
+    data_frame['imagess'] = data_frame['zomato_link'].apply(get_images)
+
+    # Creating a column for the first image
+    data_frame['first_image'] = data_frame['imagess'][0][0]
+
+    # Creating a column for the second image
+    data_frame['second_image'] = data_frame['imagess'][1][1]
     
     return data_frame
 
