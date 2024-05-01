@@ -64,8 +64,11 @@ def pipeline(df):
     data_frame['location_link'] = [df[x]['location'] for x in indexes]
 
     # Creating a column for the zomato link
-    links = list(df.keys())[0]
-    data_frame['zomato_link'] = list(df.keys())[0]
+    def get_url(restaurant_name):
+        for url, info in df.items():
+            if info['title'] == restaurant_name:
+                return url
+    data_frame['zomato_link'] = data_frame['res_name'].apply(get_url)
 
     # Creating a column for the phone number
     data_frame['delivery_rating'] = [df[x]['delivery_rating'] for x in indexes]
@@ -79,9 +82,12 @@ def pipeline(df):
     data_frame['first_image'] = data_frame['imagess'][0][0]
 
     # Creating a column for the second image
-    data_frame['second_image'] = data_frame['imagess'][1][1]
+    data_frame['second_image'] = data_frame['imagess'][0][1]
     
     return data_frame
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 def analyze_recommendation(data_frame, category):
     message = ""
@@ -105,7 +111,7 @@ def analyze_recommendation(data_frame, category):
     ideal_restaurants = ideal_restaurants.sort_values(by='similarity', ascending=False)
     
     # Removing those not similar
-    top_iqr = ideal_restaurants['similarity'].quantile(0.75)
+    top_iqr = ideal_restaurants['similarity'].quantile(0.60)
     ideal_restaurants = ideal_restaurants[ideal_restaurants['similarity'] > top_iqr]
     
     # Using ranking to get the top 5 restaurants
@@ -131,6 +137,8 @@ def recommendation(data_frame, title, total_result=5):
     cosine_sim = cosine_similarity(tfid_matrix, tfid_matrix)
     
     idx = data_frame[data_frame['res_name'] == title].index[0]
+    if idx:
+        print(f"Restaurant name: {title}")
     data_frame['similarity'] = cosine_sim[idx]
     sort_final_df = data_frame.sort_values(by='similarity', ascending=False)[1:total_result+1]
     mean = sort_final_df['actual_rating'].mean()
