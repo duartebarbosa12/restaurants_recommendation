@@ -11,3 +11,6 @@ The following are the porpuses of the files:
 - restaurant_details.csv: curated and ready to use dataset after being passed through pipeline.py
 - restaurants2.ipynb: jupyter notebook where code was tried
 - tinker.py: GUI design and implementation
+
+
+To use, please download all files except from Notebook2.ipynb and run tinker.py through python
