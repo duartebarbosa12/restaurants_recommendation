@@ -13,4 +13,4 @@ The following are the porpuses of the files:
 - tinker.py: GUI design and implementation
 
 
-To use, please download all files except from Notebook2.ipynb and run tinker.py through python
+To use, please download all files except from restaurants2.ipynb and run tinker.py through python
