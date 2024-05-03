@@ -39,7 +39,7 @@ def clear_window(data, data2, data3):
     about = tk.Label(root, text="About", font=("Times New Roman", 28, 'bold', 'italic'), bg='#f0eae1')
     about.place(x=650, y=350)
 
-    description = tk.Label(root, text="The restaurant is pretty good brother trust me", font=("Times New Roman", 18), bg='#f0eae1')
+    description = tk.Label(root, text=data['description'], font=("Times New Roman", 18), bg='#f0eae1', wraplength=500, justify='left', anchor='w')
     description.place(x=650, y=400)
 
     def open_link_1(url):
@@ -60,7 +60,6 @@ def clear_window(data, data2, data3):
     link_label = tk.Label(root, text="View Restaurant on Zomato", font=("Helvetica", 18, 'underline'), fg="blue", bg='#f0eae1', cursor="hand2")
     link_label.place(x=650, y=650)
     link_label.bind("<Button-1>", lambda e: open_link_2(data['zomato_link']))
-    
     
     response = requests.get(data['url1'])
     img_data = response.content
@@ -90,6 +89,17 @@ def clear_window(data, data2, data3):
     canvas.create_line(10, 10, 50, 10, arrow=tk.LAST, fill="black", width=5)
     canvas.bind("<Button-1>", lambda e: clear_window(data2, data3, empty))
 
+
+def get_restaurant_info(restaurant_name, data_frame):
+    restaurant_row = data_frame[data_frame['res_name'] == restaurant_name]
+    if not restaurant_row.empty:
+        info = f"The restaurant {restaurant_row['res_name'].values[0]} is known for its {restaurant_row['bag_of_words'].values[0]}. "
+        info += f"Located at {restaurant_row['res_loc'].values[0]}, it has a rating of {restaurant_row['actual_rating'].values[0]} "
+        info += f"with {restaurant_row['total_no_reviews'].values[0]} reviews. Delivery rating is {restaurant_row['delivery_rating'].values[0]}."
+        return info
+    else:
+        return "Restaurant information not available."
+        
 def search_restaurants():
     # This function can be expanded to actually perform a search
     global entry  # Access the global entry variable
@@ -98,7 +108,7 @@ def search_restaurants():
         data_frame = pd.read_csv('restaurant_details.csv')
         search_query = text.split()
         restaurants, message = analyze_recommendation(data_frame, search_query)
-        
+
         # First restaurant data
         restaurant_1_name = restaurants['res_name'].values[0]
         restaurant_1_rating = restaurants['actual_rating'].values[0]
@@ -110,6 +120,8 @@ def search_restaurants():
         restaurant_1_delivery_rating = restaurants['delivery_rating'].values[0]
         image_url_1 = restaurants['first_image'].values[0]
         image_url_2 = restaurants['second_image'].values[0]
+        restaurant_info1 = get_restaurant_info(restaurant_1_name, data_frame)
+
         data = {
             'restaurant_name': restaurant_1_name,
             'expert_rating': restaurant_1_rating,
@@ -119,7 +131,8 @@ def search_restaurants():
             'total_reviews': restaurant_1_total_reviews,
             'zomato_link': restaurant_1_link,
             'url1': image_url_1,
-            'url2': image_url_2
+            'url2': image_url_2,
+            'description': restaurant_info1
         }
         
         # Second restaurant data
@@ -133,6 +146,7 @@ def search_restaurants():
         restaurant_2_delivery_rating = restaurants['delivery_rating'].values[1]
         image_url_3 = restaurants['first_image'].values[1]
         image_url_4 = restaurants['second_image'].values[1]
+        restaurant_info2 = get_restaurant_info(restaurant_2_name, data_frame)
         data2 = {
             'restaurant_name': restaurant_2_name,
             'expert_rating': restaurant_2_rating,
@@ -142,7 +156,8 @@ def search_restaurants():
             'total_reviews': restaurant_2_total_reviews,
             'zomato_link': restaurant_2_link,
             'url1': image_url_3,
-            'url2': image_url_4
+            'url2': image_url_4,
+            'description': restaurant_info2
         }
     
         # Third restaurant data
@@ -156,6 +171,7 @@ def search_restaurants():
         restaurant_3_delivery_rating = restaurants['delivery_rating'].values[2]
         image_url_5 = restaurants['first_image'].values[2]
         image_url_6 = restaurants['second_image'].values[2]
+        restaurant_info3 = get_restaurant_info(restaurant_3_name, data_frame)
         data3 = {
             'restaurant_name': restaurant_3_name,
             'expert_rating': restaurant_3_rating,
@@ -165,7 +181,8 @@ def search_restaurants():
             'total_reviews': restaurant_3_total_reviews,
             'zomato_link': restaurant_3_link,
             'url1': image_url_5,
-            'url2': image_url_6
+            'url2': image_url_6,
+            'description': restaurant_info3
         }
     clear_window(data, data2, data3)
     
@@ -189,6 +206,7 @@ def search_restaurants_not_knowing_what_to_eat():
         restaurant_1_delivery_rating = restaurants['delivery_rating'].values[0]
         image_url_1 = restaurants['first_image'].values[0]
         image_url_2 = restaurants['second_image'].values[0]
+        description = get_restaurant_info(restaurant_1_name, data_frame)
         data = {
             'restaurant_name': restaurant_1_name,
             'expert_rating': restaurant_1_rating,
@@ -198,7 +216,8 @@ def search_restaurants_not_knowing_what_to_eat():
             'total_reviews': restaurant_1_total_reviews,
             'zomato_link': restaurant_1_link,
             'url1': image_url_1,
-            'url2': image_url_2
+            'url2': image_url_2,
+            'description': description
         }
         
         # Second restaurant data
@@ -212,6 +231,7 @@ def search_restaurants_not_knowing_what_to_eat():
         restaurant_2_delivery_rating = restaurants['delivery_rating'].values[1]
         image_url_3 = restaurants['first_image'].values[1]
         image_url_4 = restaurants['second_image'].values[1]
+        description = get_restaurant_info(restaurant_2_name, data_frame)
         data2 = {
             'restaurant_name': restaurant_2_name,
             'expert_rating': restaurant_2_rating,
@@ -221,7 +241,8 @@ def search_restaurants_not_knowing_what_to_eat():
             'total_reviews': restaurant_2_total_reviews,
             'zomato_link': restaurant_2_link,
             'url1': image_url_3,
-            'url2': image_url_4
+            'url2': image_url_4,
+            'description': description
         }
         
         # Third restaurant data
@@ -235,6 +256,7 @@ def search_restaurants_not_knowing_what_to_eat():
         restaurant_3_delivery_rating = restaurants['delivery_rating'].values[2]
         image_url_5 = restaurants['first_image'].values[2]
         image_url_6 = restaurants['second_image'].values[2]
+        description = get_restaurant_info(restaurant_3_name, data_frame)
         data3 = {
             'restaurant_name': restaurant_3_name,
             'expert_rating': restaurant_3_rating,
@@ -244,7 +266,8 @@ def search_restaurants_not_knowing_what_to_eat():
             'total_reviews': restaurant_3_total_reviews,
             'zomato_link': restaurant_3_link,
             'url1': image_url_5,
-            'url2': image_url_6
+            'url2': image_url_6,
+            'description': description
         }
     clear_window(data, data2, data3)
         
